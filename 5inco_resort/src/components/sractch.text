@@ -1,0 +1,58 @@
+ function bookingNow(e){
+      e.preventDefault();
+     
+      const payload = {
+          cabinType: cabins,
+          bookingDate: {
+              date: bookingDate.date,
+              months: bookingDate.month,
+              hours: bookingDate.hours
+          },
+          fullName: customerInfo.fullName,
+          phoneNumber: customerInfo.phone,
+          email: customerInfo.email
+      }
+      axios.post("http://localhost:8080/saved", payload)
+      .then(()=> {
+          console.log("data has been sent to the server");
+
+      })
+      .catch(()=> {
+          console.log("internal eroor")
+      })
+
+
+  }
+
+
+
+
+
+
+
+  app.get("/saved", (req, res)=> {
+    bookingList. find({})
+    .then((data)=> {
+        console.log("Data:", data)
+        res.json(data)
+    })
+    .catch((error)=> {
+        console.log(error)
+    })
+})
+
+app.post("/saved", (req, res)=> {
+    const data = req.body;
+    console.log(res.body)
+    const newBookingList = new bookingList(data);
+
+    newBookingList.save((error)=> {
+        if (!error) {
+            return res.json({
+                msg: "your data has been saved!!!"
+            });
+        } else {
+            res.status(500).json({msg: "Sorry, internal server error"})
+        }
+    })
+})
