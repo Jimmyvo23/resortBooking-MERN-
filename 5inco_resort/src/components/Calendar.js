@@ -5,12 +5,9 @@ import setMinutes from "date-fns/setMinutes";
 import axios from "axios";
 import Title from "./Title";
 
-
 import "react-datepicker/dist/react-datepicker.css";
 
-
-
-function BookingCalendar() {
+function BookingCalendar(props) {
   const months = [
     "January",
     "February",
@@ -28,16 +25,15 @@ function BookingCalendar() {
 
   const [startDate, setStartDate] = useState(new Date());
 
-  function getDate(date) {   
-    setStartDate(date)
-    console.log(date)   
-}
+  function getDate(date) {
+    setStartDate(date);
+  }
 
-const bookingDate ={ 
+  const bookingDate = {
     date: startDate.getDate(),
     month: months[startDate.getMonth()],
-    hours: startDate.getHours()
-}
+    hours: startDate.getHours(),
+  };
 
   const [customerInfo, setCustomerInfo] = useState({
     fullName: "",
@@ -45,14 +41,13 @@ const bookingDate ={
     email: "",
   });
 
-//   const cabinsType = ["CabinA", "CabinB","CabinC","CabinD"]
+  //   const cabinsType = ["CabinA", "CabinB","CabinC","CabinD"]
 
-const [type, setType] = useState("5inco")
+  const [type, setType] = useState("5inco");
 
-function handleChangeSelect(e) {
-    setType(e.target.value)
-}
-console.log(type)
+  function handleChangeSelect(e) {
+    setType(e.target.value);
+  }
 
 
   function handleChange(e) {
@@ -65,54 +60,54 @@ console.log(type)
     });
   }
   const [reservationError, setReservationError] = useState(false);
-  function bookingNow(e){
+
+  function bookingNow(e) {
     e.preventDefault();
     if (
       (customerInfo.fullName.length === 0) |
       (customerInfo.phone.length === 0) |
       (customerInfo.email.length === 0)
     ) {
-      console.log("Incomplete Details")
-      setReservationError(true)
+      console.log("Incomplete Details");
+      setReservationError(true);
     } else {
       const payload = {
-        
         bookingDate: {
-            date: bookingDate.date,
-            months: bookingDate.month,
-            time: bookingDate.hours,
+          date: bookingDate.date,
+          months: bookingDate.month,
+          time: bookingDate.hours,
         },
+        cabin: type,
         fullName: customerInfo.fullName,
         phoneNumber: customerInfo.phone,
-        email: customerInfo.email
+        email: customerInfo.email,
+      };
+
+      axios
+        .post("http://localhost:8080/saved", payload)
+        .then((response) => {
+          console.log(response);
+          console.log(payload)
+          console.log("data has been sent to the server");
+        })
+        .catch((error) => {
+          console.log(error);
+          console.log("internal error");
+        });
+      alert(
+        "Your Booking is sucessful, We will email you if there is any change!"
+      );
     }
-
-    axios.post("http://localhost:8080/saved", payload)
-    .then((response)=> {
-        console.log(response)
-        console.log("data has been sent to the server");
-
-    })
-    .catch((error)=> {
-        console.log(error)
-        console.log("internal error")
-    })
-    alert("Your Booking is sucessful, We will email you if there is any change!")
-    }
-   
-    
-
-}
-
+  }
 
   return (
     <div className="booking-section">
-    <Title title="Booking Form" />
+      <Title title="Booking Form" />
       <form method="post">
         <div className="input-booking">
           <label htmlFor="cabins">Cabins Type </label>
           <select
-          value={type}
+            value={type}
             className="calendar-booking"
             onChange={handleChangeSelect}
           >
@@ -170,7 +165,9 @@ console.log(type)
             id="email"
           ></input>
         </div>
-        <button onClick={bookingNow} className="btn-primary">Book now!</button>
+        <button onClick={bookingNow} className="btn-primary">
+          Book now!
+        </button>
       </form>
     </div>
   );

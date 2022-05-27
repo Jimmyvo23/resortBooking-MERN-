@@ -2,7 +2,6 @@ import { useContext } from "react";
 import { CabinContext } from "../Context";
 import Title from "./Title";
 
-
 const getUniqueCabin = (items, value) => {
   return [...new Set(items.map((item) => item[value]))];
 };
@@ -22,7 +21,6 @@ export default function CabinsFilter({ cabins }) {
     breakfast,
     pets,
   } = context;
-  
 
   //   Get uniqueCabin
 
@@ -53,9 +51,7 @@ export default function CabinsFilter({ cabins }) {
       <section className="filter-container">
         <Title title="Search cabins" />
       </section>
-      <section className="booking-section">
-
-      </section>
+      <section className="booking-section"></section>
       <form className="filter-form">
         {/* Select Types */}
         <div className="form-group">
@@ -87,6 +83,7 @@ export default function CabinsFilter({ cabins }) {
         <div className="form-group">
           <label htmlFor="price">Room Price : ${price}</label>
           <input
+          className="form-control"
             type="range"
             name="price"
             min={minPrice}
@@ -100,15 +97,17 @@ export default function CabinsFilter({ cabins }) {
         {/* Select by room size */}
         <div className="form-group">
           <label htmlFor="size">Room Size</label>
-          <div>
+          <div className="size-inputs">
             <input
               type="number"
               id="size"
               name="minSize"
               value={minSize}
               onChange={handleChange}
+              className="size-input"
             />
             <input
+            className="size-input"
               type="number"
               id="size"
               name="maxSize"
@@ -119,12 +118,26 @@ export default function CabinsFilter({ cabins }) {
         </div>
         {/* Select by breakfast */}
         <div className="form-group">
-          <input type="checkbox" name="breakfast" checked={breakfast} onChange={handleChange}></input>
-          <label htmlFor="breakfast">Breakfast</label>
-          <input type="checkbox" name="pets" checked={pets} onChange={handleChange}></input>
-          <label htmlFor="pets">Pets</label>
+          <div className="single-extra">
+            <input
+              type="checkbox"
+              name="breakfast"
+              checked={breakfast}
+              onChange={handleChange}
+            ></input>
+            <label htmlFor="breakfast">Breakfast</label>
+          </div>
+
+          <div className="single-extra">
+            <input
+              type="checkbox"
+              name="pets"
+              checked={pets}
+              onChange={handleChange}
+            ></input>
+            <label htmlFor="pets">Pets</label>
+          </div>
         </div>
-        
       </form>
     </div>
   );

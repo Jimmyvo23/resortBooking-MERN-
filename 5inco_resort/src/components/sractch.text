@@ -56,3 +56,159 @@ app.post("/saved", (req, res)=> {
         }
     })
 })
+
+
+
+
+
+export default class SingleCabin extends Component {
+  constructor(props) {
+    super(props);
+    // console.log(props);
+    this.state = {
+      slug: this.props.match.params.slug,
+      defaultBcg,
+      selectedDate: new Date(),
+      excludedTime: [],
+      fname: "",
+      phone: "",
+      email: "",
+      reservationError: false,
+      bookingList: [],
+      bookedDate: [],
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSelectedDate = this.handleSelectedDate.bind(this);
+    this.booking = this.booking.bind(this);
+  }
+
+  // Get Data from bookingList Collection
+
+  getBookingList() {
+    axios
+      .get("http://localhost:8080/saved")
+      .then((response) => {
+        const data = response.data;
+
+        this.setState({
+          bookingList: data,
+          bookedDate: data.map(
+            (item) => new Date(item.year, item.month, item.date, item.hour, 0)
+          ),
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+
+  // Change input value
+  handleChange(event) {
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  }
+
+  // Change Date and Time
+  handleSelectedDate = (date) => {
+    this.setState({
+      selectedDate: date
+    });
+  };
+
+  // Get excluded time on specific date
+
+  getExcludedTimes = (date) => {
+    let arrSpecificDates = [];
+    for (let i = 0; i < this.state.bookedDate.length; i++) {
+      if (
+        moment(date, moment.ISO_8601).format("YYYY/MM/DD") ===
+        moment(this.state.bookedDate[i], moment.ISO_8601).format("YYYY/MM/DD")
+      ) {
+        arrSpecificDates.push(
+          moment(this.state.bookedDate[i], moment.ISO_8601).toObject()
+        );
+      }
+    }
+
+    
+    let arrExcludedTimes = [];
+    for (let i = 0; i < arrSpecificDates.length; i++) {
+      arrExcludedTimes.push(
+        setHours(
+          setMinutes(new Date(), arrSpecificDates[i].minutes),
+          arrSpecificDates[i].hours
+          
+        )
+        
+      );
+      this.setState({
+        excludedTimes: arrExcludedTimes,
+      });
+      console.log(arrExcludedTimes)
+    }
+  };
+
+
+  booking(event) {
+    event.preventDefault();
+    if (
+      (this.state.fname.length === 0) |
+      (this.state.phone.length === 0) |
+      (this.state.email.length === 0)
+    ) {
+      console.log("Incompleted Detail??");
+      this.setState({
+        reservationError: true,
+      });
+    } else {
+      const payload = {
+        cabin: this.state.slug,
+        fname: this.state.fname,
+        phone: this.state.phone,
+        email: this.state.email,
+        date: this.state.selectedDate.getDate(),
+        month: this.state.selectedDate.getMonth(),
+        hour: this.state.selectedDate.getHours(),
+        minutes: this.state.selectedDate.getMinutes(),
+        year: this.state.selectedDate.getFullYear(),
+      };
+      axios
+        .post("http://localhost:8080/saved", payload)
+        .then((response) => {
+          console.log(response);
+          console.log(payload);
+          console.log("data has been sent to the server");
+        })
+        .catch((error) => {
+          console.log(error);
+          console.log("internal error");
+        });
+      alert(
+        "Your Booking is sucessful, We will email you if there is any change!"
+      );
+    }
+  }
+
+  refreshPage(){
+    window.location.reload(false)
+  }
+
+  static contextType = CabinContext;
+
+  componentDidMount() {
+    this.getBookingList();
+  }
+
+
+
+
+
+
+
+  
+    // let bookedCabin = [...this.state.bookingList];
+
+    // bookedCabin = bookedCabin.filter((item) => item.cabin === this.state.slug);
+
+    // const bookedDate = bookedCabin.map(
+    //   (item, key) => new Date(item.year, item.month, item.date, item.hour, 0, 0)
+    // );

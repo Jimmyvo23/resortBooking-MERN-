@@ -1,30 +1,19 @@
 import mongoose from "mongoose";
 
-const {Schema} = mongoose;
+const { Schema } = mongoose;
 
 const bookingListDB = new Schema({
-cabinType: {
-    type: String,
-    require: true,
-},
-bookingDate: {
-    type: Object,
-    require: true,
-},
-fullName: {
-    type: String,
-    require: true,
-},
-phoneNumber: {
-    type: String,
-    require: true,
-},
-email: {
-    type: String,
-    require: true
-}
-})
+  cabin: String,
+  fname: String,
+  phone: String,
+  email: String,
+  date: Number,
+  month: Number,
+  hour: Number,
+  minute: Number,
+  year: Number,
+});
 
 const bookingList = mongoose.model("bookingList", bookingListDB);
 
-export default bookingList
+export default bookingList;

@@ -6,6 +6,7 @@ import SingleCabin from "./pages/SingleCabin";
 import Error from "./pages/Error";
 import NavBar from "./components/NavBar";
 import { Switch, Route } from "react-router-dom";
+import AdminPage from "./pages/Admin";
 
 function App() {
   return (
@@ -15,8 +16,10 @@ function App() {
         <Route exact path="/" component={Home} />
         <Route exact path="/cabins/" component={Cabins} />
         <Route exact path="/services/" component={Services} />
+        <Route exact path="/admin/" component={AdminPage} />
         <Route exact path="/cabins/:slug" component={SingleCabin} />
         <Route path="*" component={Error} />
+        
       </Switch>
     </div>
   );

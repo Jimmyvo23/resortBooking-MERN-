@@ -61,78 +61,10 @@ app.post("/saved", (req, res)=> {
     })
 })
 
-// Availability Rouute
-
-// app.post("/availability", (req, res, next) => {
-//   console.log("request attempted");
-
-//   console.log(req.body);
-//   const dateTime = new Date(req.body.date);
-
-//   Day.find({ date: dateTime }, (err, docs) => {
-//     if (!err) {
-//       if (docs.length > 0) {
-//         // Record already exists
-//         console.log("Record exists. Sent docs.");
-//         res.status(200).send(docs[0]);
-//       } else {
-//         // Search date does not exists and we need to create it
-//         const day = new Day({
-//           date: dateTime,
-//           cabins: allCabin,
-//         });
-//         day.save((err) => {
-//           if (err) {
-//             res.status(400).send("error saving new Date");
-//           } else {
-//             // Saved date and need to return all cabin (because all are now available)
-//             console.log("Create new datetime. Here are the default docs");
-//             Day.find({ date: dateTime }, (err, docs) => {
-//               err ? res.sendStatus(400) : res.status(200).send(docs[0]);
-//             });
-//           }
-//         });
-//       }
-//     } else {
-//       res.status(400).send("Cound not search for date");
-//     }
-//   });
-// });
-
-// // Reservation Route
-// app.post("/reservation", function(req, res, next) {
-//   Day.find({ date: req.body.date }, (err, days) => {
-//     if (!err) {
-//       if (days.length > 0) {
-//         let day = days[0];
-//         day.cabins.forEach(cabin => {
-//           if (cabin._id == req.body.table) {
-//             // The correct table is table
-//             cabin.reservation = new Reservation({
-//               name: req.body.name,
-//               phone: req.body.phone,
-//               email: req.body.email
-//             });
-//             cabin.isAvailable = false;
-//             day.save(err => {
-//               if (err) {
-//                 console.log(err);
-//               } else {
-//                 console.log("Reserved");
-//                 res.status(200).send("Added Reservation");
-//               }
-//             });
-//           }
-//         });
-//       } else {
-//         console.log("Day not found");
-//       }
-//     }
-//   });
-// });
+/
 
 app.get("/", (req, res) => {
-  res.send("Hello world!");
+  res.send("Hello world, Welcome to my server!");
 });
 
 app.listen(PORT, () => {
